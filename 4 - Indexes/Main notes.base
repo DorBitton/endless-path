@@ -1,0 +1,18 @@
+filters:
+  and:
+    - file.inFolder("6 - Main notes")
+views:
+  - type: table
+    name: All notes
+    order:
+      - file.name
+      - tags
+      - date
+  - type: table
+    name: Needs attention
+    filters:
+      and:
+        - file.size < 50
+    order:
+      - file.name
+      - file.size

@@ -1,0 +1,9 @@
+# Obsidian trash
+.trash/
+
+# Obsidian workspace layout cache
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Files exceeding GitHub 100MB limit
+2 - Source Material/125 Specific Ways to Write Better Python 3ed 2024.pdf
