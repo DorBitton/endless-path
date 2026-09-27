@@ -1,0 +1,27 @@
+Docker network is based on libnetwork
+which is the reference
+implementation of an open-source architecture called the Container
+Network Model (CNM).
+
+For a smooth out-of-the-box experience, Docker ships with everything you
+need for the most common networking requirements, including multi-host
+container-to-container networks and options for plugging into existing
+VLANs. However, the model is pluggable, and the ecosystem can extend
+Docker’s networking capabilities via drivers that plug into libnetwork.
+Last but not least, libnetwork also provides native service discovery and
+basic load balancing
+
+basically,
+to reach out to the public internet
+the route is
+container ask eth0 (endpoint , it's local network virtual adapter)
+eth0 goes through the gateway which is docker0, the docker virtual network adapter on the host machine
+for the request knows where to return the answer to, the host nat tables translate the container private ip into the host machine ip, and sends to out side internet using host network card
+
+
+for getting traffic,
+we will have to expose the docker container port, like -p 8080:80
+this creates a rule on nat tables that every request that gets to the hot machine on 8080 to be translated to the private container ip, and sent to the docker0 interface for routing to the right container
+
+
+for some extra steps, i would like to know how the nat tables rule look like when we create the full note, where to look for them. 

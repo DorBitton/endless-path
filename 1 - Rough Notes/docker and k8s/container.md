@@ -43,3 +43,7 @@ need to summerize when each happens, attaching a photo:
 
 we can set the policy at the docker run command
 docker run --name "name" --restart "policy" "image" "cli args"
+
+Ctrl-PQ is how you detach from a container without killing the
+process you’re attached to. You’ll use it frequently to detach from
+running containers without killing them.
