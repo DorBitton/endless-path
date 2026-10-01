@@ -28,7 +28,33 @@ stateDiagram-v2
     Stopped --> [*] : docker rm
 ```
 
-### Host Privileges and the Docker Socket
+### 1. How Containers Start Applications (ENTRYPOINT vs. CMD)
+When a container launches, its entrypoint process is determined by a hierarchy of three layers:
+1. **ENTRYPOINT:** Defines the fixed executable binary that runs when the container starts. It is not overridden by trailing CLI arguments; trailing CLI arguments are appended as arguments to the entrypoint binary. (To override, the user must explicitly pass `--entrypoint <binary>`).
+2. **CMD:** Defines default arguments passed to the entrypoint, or the default executable if no ENTRYPOINT exists. Passing a trailing command on the CLI (`docker run <image> <command>`) completely overrides the Dockerfile `CMD`.
+3. **CLI Arguments:** Trailing arguments provided at `docker run <flags> <image> <args>` override `CMD` and append to `ENTRYPOINT`.
+
+| Dockerfile Configuration | CLI Invocation | Executed Process & Arguments |
+| :--- | :--- | :--- |
+| `ENTRYPOINT ["nginx"]`<br/>`CMD ["-g", "daemon off;"]` | `docker run my-nginx` | `nginx -g "daemon off;"` |
+| `ENTRYPOINT ["nginx"]`<br/>`CMD ["-g", "daemon off;"]` | `docker run my-nginx -v` | `nginx -v` (CLI overrides CMD) |
+| `ENTRYPOINT ["ping"]` | `docker run my-ping 8.8.8.8` | `ping 8.8.8.8` (CLI appends to ENTRYPOINT) |
+
+### 2. Self-Healing Restart Policies
+Docker containers can automatically restart when their processes exit or when the host daemon restarts. The policy is configured via `--restart <policy>`:
+
+| Restart Policy | Non-Zero Exit Code (Crash) | Clean Exit (Code 0) | Stopped via `docker stop` | Host / Daemon Restarts |
+| :--- | :---: | :---: | :---: | :---: |
+| **`no`** (default) | No | No | No | No |
+| **`on-failure`** | **Yes** | No | No | **Yes** (if failing) |
+| **`always`** | **Yes** | **Yes** | No | **Yes** (even if manually stopped) |
+| **`unless-stopped`** | **Yes** | **Yes** | No | **No** (if stopped before restart) |
+
+- **`always` vs `unless-stopped` (The Production Gotcha):** Both policies restart crashed or exited containers. However, if an administrator deliberately stops a container with `docker stop web-app` and the host reboots:
+  - Under **`always`**, Docker ignores the previous manual stop and restarts the container upon reboot.
+  - Under **`unless-stopped`**, Docker recognizes the container was explicitly stopped prior to reboot and leaves it stopped.
+
+### 3. Host Privileges and the Docker Socket
 Running Docker commands without `sudo` requires adding the user to the local `docker` group:
 ```bash
 sudo usermod -aG docker $USER
@@ -65,8 +91,11 @@ docker ps -a
 # Stream standard output and standard error logs with timestamps
 docker logs -f --tail 100 web-proxy
 
-# Execute a diagnostic shell inside an already running container
+# Execute an interactive shell inside a running container
 docker exec -it web-proxy sh
+
+# Execute a one-off command non-interactively without entering the container
+docker exec web-proxy ls -la /var/log
 
 # Stream real-time cgroup CPU, memory, network, and block I/O utilization
 docker stats
@@ -74,6 +103,8 @@ docker stats
 # Inspect container low-level JSON configuration, IP address, and mounts
 docker inspect web-proxy --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
 ```
+
+- **Safe Detachment (Ctrl-P, Ctrl-Q):** When attached to a container via `docker attach` or `docker run -it`, typing `Ctrl-C` sends `SIGINT` to Process ID 1, killing the container. Pressing the key combination `Ctrl-P` followed by `Ctrl-Q` detaches your terminal session cleanly without terminating the container process.
 
 ### 3. Stopping and Cleaning Up
 ```bash
@@ -109,12 +140,20 @@ docker system prune
 - **Execution Engine:** [[Container Runtimes (containerd and runc)]] (How dockerd passes execution to containerd and runc).
 - **Filesystem Layers:** [[Container Storage and OverlayFS]] (How the container writable layer is created and discarded).
 - **Image Blueprints:** [[Container Images and Multi-Arch Manifests]] (How images are tagged, pulled, and verified).
+- **Application Packaging:** [[Containerizing Applications]] (How Dockerfiles define ENTRYPOINT, CMD, and dependencies).
+- **Networking:** [[Container Networking and CNM]] (How container endpoints attach to bridge networks).
 - **Kernel Isolation:** [[Linux Namespaces]] (How UTS, PID, NET, and MNT isolate container processes).
 - **Signal Handling:** [[Process Control]] (How Linux processes respond to SIGTERM, SIGKILL, and SIGSTOP).
 
 ---
 
 ## ⚡ Active Recall Flashcards
+
+What is the operational difference between ENTRYPOINT and CMD in a Dockerfile?::ENTRYPOINT sets the default executable that trailing CLI arguments append to; CMD sets default arguments that trailing CLI arguments completely overwrite.
+
+How do the restart policies 'always' and 'unless-stopped' differ after a host reboot?::`always` restarts containers even if they were manually stopped prior to reboot; `unless-stopped` keeps manually stopped containers stopped.
+
+What key combination allows an engineer to detach from an interactive container terminal without stopping the container?::`Ctrl-P, Ctrl-Q` (detaches without sending SIGINT).
 
 What signal sequence does docker stop send to a running container?::It sends `SIGTERM`, waits a default 10-second grace period for cleanup, and then sends `SIGKILL`.
 
@@ -123,5 +162,3 @@ Why does docker stop often hang for 10 seconds on poorly configured container ap
 How does running a container with the --init flag prevent zombie process accumulation?::It inserts a lightweight init system (`tini`) as Process ID 1 to forward signals and reap orphaned child processes.
 
 Why is adding an unprivileged user to the host docker group considered a severe security risk?::Access to `/var/run/docker.sock` allows mounting the host root filesystem into a container, granting full root privileges over the host.
-
-Which flag ensures a temporary debugging container automatically deletes its writable storage layer upon exit?::`--rm` (`docker run --rm ...`)

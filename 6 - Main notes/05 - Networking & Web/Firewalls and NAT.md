@@ -132,6 +132,7 @@ update-alternatives --display iptables
 - **Packet Traversal:** [[IP Routing and ARP]] (How the routing table handles forwarded vs local traffic).
 - **Triage Ladder:** [[Network Troubleshooting]] (Using `nc` and `tcpdump` to verify firewall behavior).
 - **Container Bridge:** [[Container Runtimes (containerd and runc)]] (How container networks attach to host bridges).
+- **Container Networking:** [[Container Networking and CNM]] (CNM model, veth pairs, and inspection of Docker NAT rules in the kernel).
 - **Container Operations:** [[Docker Container Lifecycle and CLI]] (How `docker run -p` provisions NAT rules).
 
 ---
