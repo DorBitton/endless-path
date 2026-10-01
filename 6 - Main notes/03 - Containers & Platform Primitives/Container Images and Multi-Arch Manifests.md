@@ -71,6 +71,8 @@ docker image prune
 ---
 
 ## 🔗 Connections (Mental Mapping)
+- **Container Lifecycle:** [[Docker Container Lifecycle and CLI]] (How images are instantiated, run, and stopped).
+- **Supervision Architecture:** [[Container Runtimes (containerd and runc)]] (How containerd pulls images and unpacks them for runc).
 - **Runtime Execution:** [[Container Storage and OverlayFS]] (How these read-only layers get mounted and modified at runtime).
 - **Process Boundaries:** [[Linux Namespaces]] (How the container process is isolated while running the image binaries).
 - **Resource Control:** [[cgroups]] (Restricting CPU and memory consumed by the image workload).

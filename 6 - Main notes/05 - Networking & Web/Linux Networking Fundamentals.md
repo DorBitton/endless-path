@@ -35,6 +35,6 @@ This topic is organized into four focused atomic notes:
 ## 🔗 Related & Advanced Topics
 
 - **Diagnostics & Triage:** [[Network Troubleshooting]] (diagnostic ladder: `ping`, `mtr`, `nc`, `ss`, `dig`, `tcpdump`)
-- **Firewalls & Kernel Datapath:** [[firewalls and nat]] (Netfilter hooks, NAT mechanics, container bridge networking)
+- **Firewalls & Kernel Datapath:** [[Firewalls and NAT]] (Netfilter hooks, NAT mechanics, container bridge networking)
 - **Web Servers:** [[httpd]]
 - **System Supervision:** [[systemd]], [[systemd units]]

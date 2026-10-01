@@ -76,6 +76,8 @@ docker run --read-only --tmpfs /tmp alpine:latest
 ---
 
 ## 🔗 Connections (Mental Mapping)
+- **Container Lifecycle:** [[Docker Container Lifecycle and CLI]] (How the writable layer is provisioned and deleted with containers).
+- **Supervision Architecture:** [[Container Runtimes (containerd and runc)]] (How containerd snapshotters manage OverlayFS mounts for runc).
 - **Layer Blueprint:** [[Container Images and Multi-Arch Manifests]] (How layers and manifests are packaged, hashed, and pulled).
 - **Filesystem Isolation:** [[Linux Namespaces]] (Specifically the Mount Namespace `CLONE_NEWNS` and `pivot_root`).
 - **Host Storage Path:** Linux `/var/lib/docker/overlay2/`.
