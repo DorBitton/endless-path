@@ -67,10 +67,10 @@ that are grouped into three categories.
 Table 1-1. The integer types in Go
 Type nameValue range
 intplatform dependent
-int8–128 to 127
-int16–32768 to 32767
-int32–2147483648 to 2147483647
-int64–9223372036854775808 to 9223372036854775807
+int8: -128 to 127
+int16: -32768 to 32767
+int32: -2147483648 to 2147483647
+int64: -9223372036854775808 to 9223372036854775807
 uintplatform dependent
 uint80 to 255
 uint160 to 65535
@@ -160,3 +160,32 @@ clarifies the intent of your code:
 var myFirstInitial rune = 'J' // good - the type name matches the
 usage
 var myLastInitial int32 = 'B' // bad - legal but confusing
+
+## Explicit Type Conversion
+
+Most languages that have multiple numeric types automatically convert from one to another when needed. This is called automatic type promotion, and while it seems very convenient, it turns out that the rules to properly convert one type to another can get complicated and produce unexpected results. As a language that values clarity of intent and readability, Go doesn't allow automatic type promotion between variables. You must use a type conversion when variable types do not match. Even different-sized integers and floats must be converted to the same type to interact. This makes it clear exactly what type you want without having to memorize any type conversion rules.
+
+### Type conversions
+```go
+var x int = 10
+var y float64 = 30.2
+var sum1 float64 = float64(x) + y
+var sum2 int = x + int(y)
+fmt.Println(sum1, sum2) // prints 40.2 40
+```
+In this code, x is an int with value 10, and y is a float64 with value 30.2. Since these are not identical types, you need to convert them to add them together. For sum1, convert x to float64 using `float64(x)`. For sum2, convert y to int using `int(y)` (which truncates the decimal). Prints `40.2 40`.
+
+### Integer type conversions
+The same behavior applies with different-sized integer types:
+```go
+var x int = 10
+var b byte = 100
+var sum3 int = x + int(b)
+var sum4 byte = byte(x) + b
+fmt.Println(sum3, sum4)
+```
+
+### No Truthiness / Booleans
+This strictness around types has other implications. Since all type conversions in Go are explicit, you cannot treat another Go type as a boolean. In many languages, a nonzero number or a nonempty string can be interpreted as a boolean true. Just like automatic type promotion, the rules for "truthy" values vary from language to language and can be confusing. Go doesn't allow truthiness. In fact, no other type can be converted to a bool, implicitly or explicitly (e.g. `bool(1)` is a compile error). If you want to convert from another data type to boolean, you must use one of the comparison operators (`==`, `!=`, `>`, `<`, `<=`, or `>=`):
+- To check if variable x is equal to 0: `x == 0`
+- To check if string s is empty: `s == ""`
