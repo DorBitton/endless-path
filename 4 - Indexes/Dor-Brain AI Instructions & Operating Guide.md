@@ -70,7 +70,7 @@ graph TD
 | `1 - Rough Notes/` | Scratchpads, quick thoughts, temporary working logs | Transient, unpolished notes |
 | `2 - Source Material/` | Raw books, PDF transcripts, cheat sheets | Reference dumps only |
 | `3 - Tags/` | Tag indexes and hierarchies | Managed via YAML frontmatter |
-| `4 - Indexes/` | Master maps of content (MOCs), operating guides | High-level overviews and SOPs |
+| `4 - Indexes/` | Master maps of content (MOCs), operating guides, book maps | High-level overviews, roadmaps, and book indexes (e.g. `Book Map - Kubernetes in Action (2nd Edition).md`, `Book Map - Learning Go (2nd Edition).md`) |
 | `5 - Templates/` | Standardized Obsidian markdown templates | Used for new notes (`Programming Note.md`, etc.) |
 | `6 - Main notes/` | Permanent, atomic, interconnected knowledge notes | Organized by domain subfolders (e.g. `01 - Processes & Linux Core`, `02 - Security & Permissions`, `03 - Containers & Platform Primitives`, `04 - Systemd & Node Supervision`, `05 - Networking & Web`, `06 - Bash & Shell Scripting`, `07 - Go & Software Engineering`, `08 - Kubernetes & Cloud`). Bash is split one note per drill skill under a hub note `Bash`; see `7 - Drills/Drills - Bash.md` for the mapping |
 | `7 - Drills/` | Hands-on practice: protocol, per-language skill registries, attempt log, solutions | See `7 - Drills/Drill Protocol.md`. Registries are tagged `#review` so the SR plugin schedules them |

@@ -15,3 +15,5 @@ Append-only. One row per attempt. The AI reads the tail of this file to pick the
 | 2026-09-08 | bash | conditionals | 1 | Check path type (-f/-d) with [[ ]], stderr on miss | PASS | None |
 | 2026-09-11 | bash | loops | 1 | Read hosts file line by line with read -r, numbered output, total after loop | PASS | None (also noticed: numbering started at 0, missing-file branch exits 0) |
 | 2026-09-12 | bash | files-logs | 1 | Delete .log files older than 7 days in $1 with one find, print each, validate directory | PARTIAL | Two separate find runs (list, then delete) instead of -print -delete: what is printed is not guaranteed to be what is deleted |
+| 2026-10-08 | bash | functions | 1 | Check regular file in function, return status, call in if | PARTIAL | Function echoed output instead of pure status return; called bare instead of inside if condition |
+| 2026-10-16 | go | vars-zero | 1 | Probe health check state using zero values, package var, and short declaration | PASS | None |

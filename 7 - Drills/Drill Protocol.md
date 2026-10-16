@@ -26,7 +26,7 @@ This document is both the human docs and the AI instructions. Any AI assistant (
 
 ## 🚀 How the user runs a drill (minimum friction)
 
-1. Open a terminal anywhere and start the assistant (`claude`, then `/drill`, or `/drill bash`, or `/drill bash loops`). In Gemini CLI, run it from the vault directory and type `drill`.
+1. Open a terminal anywhere and start the assistant (`drill bash`, `drill go`, `drill go vars-zero`, or `drill go k8s-conditions-filter`). If typed as bare `drill`, the assistant asks or alternates.
 2. A single task appears with a `Read first:` line naming the note (and sections) that covers the skill, and a file path to write into.
 3. Open the note, read the named sections, then **close it**. Theory goes in before the attempt, not during it.
 4. Write the solution in a real terminal or editor from memory, with the note and the assistant window closed. Time budget: 10 minutes. Save it. Type `done` (or paste the code directly into the chat).
@@ -39,6 +39,7 @@ This document is both the human docs and the AI instructions. Any AI assistant (
 ### Step 0: Load state
 - Read `7 - Drills/Drill Log.md` (last 20 lines are enough).
 - Read the registry for the requested language (default: Bash). If the user named a skill, use it; otherwise pick by priority: a skill whose last result was FAIL, then the skill drilled least recently, then the lowest level.
+- **Skill Availability Rule:** Only pick skills marked as `Unlocked` whose note exists in `6 - Main notes/`. Never assign a skill marked `Locked` or whose concepts have not yet been studied and documented.
 
 ### Step 1: Generate one task
 - Exactly one task. Solvable in 5 to 15 lines at the skill's current level.
